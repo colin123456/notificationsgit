@@ -15,11 +15,11 @@ namespace Notifications.DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Notifications.DataAccess.NotificationEntity", b =>
+            modelBuilder.Entity("Notifications.DataAccess.Entities.NotificationEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -27,6 +27,26 @@ namespace Notifications.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("Notifications.DataAccess.Entities.TemplateEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Body");
+
+                    b.Property<string>("EventType");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Templates");
+
+                    b.HasData(
+                        new { Id = new Guid("d28888e9-2ba9-473a-a40f-e38cb54f9b35"), Body = "Hi {Firstname}, your appointment with {OrganisationName} at {AppointmentDateTime} has been - cancelled for the following reason: {Reason}.", EventType = "AppointmentCancelled", Title = "Appointment Cancelled" }
+                    );
                 });
 #pragma warning restore 612, 618
         }

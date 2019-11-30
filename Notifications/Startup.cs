@@ -37,7 +37,13 @@ namespace Notifications
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
 
-            var connection = @"Server=.;Database=notifications-db;Trusted_Connection=True;ConnectRetryCount=0";
+            //Data Source=(localdb)\ProjectsV13;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
+            var connection = @"Server=(localdb)\ProjectsV13;Database=notifications-db;Trusted_Connection=True;ConnectRetryCount=0";
+            //var connection = @"Server=.;Database=NotificationsDB;Trusted_Connection=True;";
+            //Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
+            // it's better to store the connection string in an environment variable)
+            //var connection = Configuration["ConnectionStrings:MoviesDBConnectionString"];
+            //services.AddDbContext<NotificationsDbContext>(o => o.UseSqlServer(connectionString));
             services.AddDbContext<NotificationsDbContext>
                 (options => options.UseSqlServer(connection));
 
