@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Notifications.Common.Interfaces;
 using Notifications.Common.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Notifications.Controllers
 {
@@ -17,11 +18,12 @@ namespace Notifications.Controllers
     public class NotificationsController : ControllerBase
     {
         private readonly INotificationsService _notificationsService;
+        private readonly ILogger<NotificationsController> _logger;
 
-        //public async Task<IActionResult> GetTop5MoviesBySpecifiedUserRating(Guid? userId)
-        public NotificationsController(INotificationsService notificationsService)
+        public NotificationsController(INotificationsService notificationsService, ILogger<NotificationsController> logger)
         {
             this._notificationsService = notificationsService;
+            this._logger = logger;
         }
 
         [Route("")]
@@ -33,7 +35,7 @@ namespace Notifications.Controllers
                 var notifications = await _notificationsService.GetAllNotifications();
                 if (notifications == null)
                 {
-                   // _logger.LogWarning($"No Notifications found ");
+                    _logger.LogWarning($"No Notifications found ");
                     return NotFound();
                 }
                 return Ok(notifications);
@@ -41,7 +43,7 @@ namespace Notifications.Controllers
             }
             catch (Exception e)
             {
-               // _logger.LogCritical($"Exception {e}: while getting Top 5 movies by user rating ");
+                _logger.LogCritical($"Exception {e}: while getting Top 5 movies by user rating ");
                 return StatusCode(500, "A problem happened with handling your request.");
             }
 
@@ -56,14 +58,14 @@ namespace Notifications.Controllers
                 var notifications = await _notificationsService.GetNotificationsByUser(userId);
                 if (notifications == null)
                 {
-                    // _logger.LogWarning($"No Notifications found ");
+                    _logger.LogWarning($"No Notifications found ");
                     return NotFound();
                 }
                 return Ok(notifications);
             }
             catch (Exception e)
             {
-                // _logger.LogCritical($"Exception {e}: while getting Top 5 movies by user rating ");
+                _logger.LogCritical($"Exception {e}: while getting notifications by user ");
                 return StatusCode(500, "A problem happened with handling your request.");
             }
         }
@@ -81,7 +83,7 @@ namespace Notifications.Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    //_logger.LogError($"did not meet one of the validation rules");
+                    _logger.LogError($"did not meet one of the validation rules");
                     return BadRequest();
                 }
 
@@ -115,7 +117,7 @@ namespace Notifications.Controllers
             }
             catch (Exception e)
             {
-               // _logger.LogCritical($"Exception {e}: while adding user rating");
+                _logger.LogCritical($"Exception {e}: while adding event");
                 return StatusCode(500, "A problem happened with handling your request.");
             }
         }

@@ -49,6 +49,13 @@ namespace Notifications
 
             services.AddTransient<INotificationsAccess, NotificationsAccess>();
             services.AddTransient<INotificationsService, NotificationsService>();
+
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
