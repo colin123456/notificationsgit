@@ -29,11 +29,11 @@ namespace Notifications.Controllers
         }
 
 
-        //[HttpGet("{userId}")]
-        //public ActionResult<NotificationModel> Get(int userId)
-        //{
-        //    return "value";
-        //}
+        [HttpGet("{userId}")]
+        public IReadOnlyCollection<NotificationModel> Get(int userId)
+        {
+            return _notificationsService.GetNotificationsByUser(userId);
+        }
 
         [HttpPost("AddEvent")]
         public async Task<IActionResult> AddEvent([FromBody] EventModel eventModel)
