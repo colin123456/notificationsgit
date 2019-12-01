@@ -11,7 +11,10 @@ namespace Notifications.DataAccess.Migrations
                 name: "Notifications",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    EventType = table.Column<string>(nullable: true),
+                    Body = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

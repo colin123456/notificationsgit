@@ -10,7 +10,7 @@ using Notifications.DataAccess;
 namespace Notifications.DataAccess.Migrations
 {
     [DbContext(typeof(NotificationsDbContext))]
-    [Migration("20191130171554_InitialCreate")]
+    [Migration("20191201141240_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,12 @@ namespace Notifications.DataAccess.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Body");
+
+                    b.Property<string>("EventType");
+
+                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,11 +30,16 @@ namespace Notifications.Controllers
             return _notificationsService.GetAllNotifications();
         }
 
+       
+
 
         [HttpGet("{userId}")]
-        public IReadOnlyCollection<NotificationModel> Get(int userId)
+        public async Task<IReadOnlyCollection<NotificationModel>> Get(int userId)
         {
+           
+
             return _notificationsService.GetNotificationsByUser(userId);
+
         }
 
         [HttpPost("AddEvent")]
@@ -71,6 +78,19 @@ namespace Notifications.Controllers
                     return StatusCode(500, "A problem happened with handling your request.");
                 }
 
+                //send web socket
+                var context = ControllerContext.HttpContext;
+                var isSocketRequest = context.WebSockets.IsWebSocketRequest;
+                var ct = context.RequestAborted;
+
+                if (isSocketRequest)
+                {
+                    WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                    //await GetMessages(context, webSocket, userId);
+                    await SendStringAsync(webSocket, eventModel.ToString(), ct);
+                }
+
+
                 return Ok();
             }
             catch (Exception e)
@@ -89,6 +109,12 @@ namespace Notifications.Controllers
                 sb.Replace("{OrganisationName}", eventData.OrganisationName);
                 sb.Replace("{Reason}", eventData.Reason);
                 return sb.ToString();
+        }
+        private static Task SendStringAsync(WebSocket socket, string data, CancellationToken ct = default)
+        {
+            var buffer = Encoding.UTF8.GetBytes(data);
+            var segment = new ArraySegment<byte>(buffer);
+            return socket.SendAsync(segment, WebSocketMessageType.Text, true, ct);
         }
     }
 }
