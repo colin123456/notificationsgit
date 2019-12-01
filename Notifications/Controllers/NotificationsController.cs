@@ -26,6 +26,12 @@ namespace Notifications.Controllers
             this._logger = logger;
         }
 
+        public NotificationsController(INotificationsService notificationsService)
+        {
+            this._notificationsService = notificationsService;
+            
+        }
+
         [Route("")]
         [HttpGet]
         public async Task<IActionResult> Get()
