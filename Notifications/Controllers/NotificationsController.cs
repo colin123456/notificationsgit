@@ -18,6 +18,7 @@ namespace Notifications.Controllers
     {
         private readonly INotificationsService _notificationsService;
 
+        //public async Task<IActionResult> GetTop5MoviesBySpecifiedUserRating(Guid? userId)
         public NotificationsController(INotificationsService notificationsService)
         {
             this._notificationsService = notificationsService;
@@ -25,21 +26,46 @@ namespace Notifications.Controllers
 
         [Route("")]
         [HttpGet]
-        public IReadOnlyCollection<NotificationModel> Get()
+        public async Task<IActionResult> Get()
         {
-            return _notificationsService.GetAllNotifications();
+            try
+            {
+                var notifications = await _notificationsService.GetAllNotifications();
+                if (notifications == null)
+                {
+                   // _logger.LogWarning($"No Notifications found ");
+                    return NotFound();
+                }
+                return Ok(notifications);
+
+            }
+            catch (Exception e)
+            {
+               // _logger.LogCritical($"Exception {e}: while getting Top 5 movies by user rating ");
+                return StatusCode(500, "A problem happened with handling your request.");
+            }
+
         }
 
-       
-
-
         [HttpGet("{userId}")]
-        public async Task<IReadOnlyCollection<NotificationModel>> Get(int userId)
+        public async Task<IActionResult> Get(int userId)
         {
-           
 
-            return _notificationsService.GetNotificationsByUser(userId);
-
+            try
+            {
+                var notifications = await _notificationsService.GetNotificationsByUser(userId);
+                if (notifications == null)
+                {
+                    // _logger.LogWarning($"No Notifications found ");
+                    return NotFound();
+                }
+                return Ok(notifications);
+            }
+            catch (Exception e)
+            {
+                // _logger.LogCritical($"Exception {e}: while getting Top 5 movies by user rating ");
+                return StatusCode(500, "A problem happened with handling your request.");
+            }
         }
 
         [HttpPost("AddEvent")]
@@ -80,17 +106,11 @@ namespace Notifications.Controllers
 
                 //send web socket
                 var context = ControllerContext.HttpContext;
-                var isSocketRequest = context.WebSockets.IsWebSocketRequest;
+                //var isSocketRequest = context.WebSockets.IsWebSocketRequest;
                 var ct = context.RequestAborted;
-
-                if (isSocketRequest)
-                {
-                    WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                    //await GetMessages(context, webSocket, userId);
-                    await SendStringAsync(webSocket, eventModel.ToString(), ct);
-                }
-
-
+                WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                await SendStringAsync(webSocket, eventModel.ToString(), ct);
+               
                 return Ok();
             }
             catch (Exception e)

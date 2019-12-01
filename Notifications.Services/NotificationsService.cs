@@ -27,9 +27,9 @@ namespace Notifications.Services
             return (await this.notificationsAccess.SaveChangesAsync());
         }
 
-        public IReadOnlyCollection<NotificationModel> GetAllNotifications()
+        public async Task<IReadOnlyCollection<NotificationModel>> GetAllNotifications()
         {
-            return this.notificationsAccess.GetAllNotifications().ToList();
+            return (IReadOnlyCollection<NotificationModel>) await this.notificationsAccess.GetAllNotifications();
         }
 
         public TemplateModel GetTemplate(string eventType)
@@ -37,9 +37,9 @@ namespace Notifications.Services
             return this.notificationsAccess.GetTemplate(eventType);
         }
 
-        public IReadOnlyCollection<NotificationModel> GetNotificationsByUser(int userId)
+        public async Task<IReadOnlyCollection<NotificationModel>> GetNotificationsByUser(int userId)
         {
-            return this.notificationsAccess.GetNotificationsByUser(userId).ToList();
+            return (IReadOnlyCollection<NotificationModel>) await this.notificationsAccess.GetNotificationsByUser(userId);
         }
     }
 }

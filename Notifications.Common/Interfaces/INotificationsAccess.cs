@@ -8,8 +8,8 @@ namespace Notifications.Common.Interfaces
 {
     public interface INotificationsAccess
     {
-        IEnumerable<NotificationModel> GetNotificationsByUser(int userId);
-        IEnumerable<NotificationModel> GetAllNotifications();
+        Task<IEnumerable<NotificationModel>> GetNotificationsByUser(int userId);
+        Task<IEnumerable<NotificationModel>> GetAllNotifications();
         TemplateModel GetTemplate(string eventType);
         void AddNotification(NotificationModel notification);
         Task <bool> SaveChangesAsync();
