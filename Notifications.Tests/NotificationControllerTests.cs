@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Xunit;
 using Moq;
 using Notifications.Common.Interfaces;
@@ -33,8 +34,41 @@ namespace Notifications.Tests
         //    Assert.Equal(2, model.Count());
         //}
 
+        //var mockService = new Mock<IValidateBarcodeService>();
+        //var fakeModel = new ValidateBarcode { SiteId = 1, Barcode = "TEST" };
+
+        //mockService.Setup(t => t.ElasticSearchForBarcode(fakeModel)).Returns(Task.FromResult(new List<BarcodeDocument>()));
+
+        //var controller = new BarcodesController(mockService.Object);
+
+        //var result = await controller.ValidateBarcode(fakeModel);
+
+        //Assert.IsType<BadRequestObjectResult>(result);
+
+
+        //[Fact]
+        //public void Get_WhenCalled_ReturnsOkResult()
+        //{
+        //    // Act
+        //    var okResult = _controller.Get();
+
+        //    // Assert
+        //    Assert.IsType<OkObjectResult>(okResult.Result);
+        //}
+
+        //[Fact]
+        //public void Get_WhenCalled_ReturnsAllItems()
+        //{
+        //    // Act
+        //    var okResult = _controller.Get().Result as OkObjectResult;
+
+        //    // Assert
+        //    var items = Assert.IsType<List<ShoppingItem>>(okResult.Value);
+        //    Assert.Equal(3, items.Count);
+        //}
+
         [Fact]
-        public async Task Get_ReturnAllNotifications()
+        public async Task Get_WhenCalled_ReturnsOkResult()
         {
             //Arrange
             var mockService = new Mock<INotificationsService>();
@@ -45,13 +79,42 @@ namespace Notifications.Tests
             var controller = new NotificationsController(mockService.Object, mockLogger.Object);
            
             // Act
-            var resullt = await controller.Request
+            //var result = await controller.Get();
+            var okResult = await controller.Get();
 
             //Assert
+            Assert.IsType<OkObjectResult>(okResult);
+            //Assert.IsType<OkObjectResult>(result);
+            //var model = Assert.IsAssignableFrom<List<NotificationModel>>(result);
+            //Assert.Equal(2, model.Count);
+        }
+
+        [Fact]
+        public async Task Get_WhenCalled_ReturnsAllNotifications()
+        {
+            //Arrange
+            var mockService = new Mock<INotificationsService>();
+            var mockLogger = new Mock<ILogger<NotificationsController>>();
+
+            mockService.Setup(s => s.GetAllNotifications())
+                .ReturnsAsync(GetTestNotifications());
+            var controller = new NotificationsController(mockService.Object, mockLogger.Object);
+
+            // Act
+            var okResult = await controller.Get() as OkObjectResult;
+
+            // Assert
+            if (okResult != null)
+            {
+                var items = Assert.IsAssignableFrom<IReadOnlyCollection<NotificationModel>>(okResult.Value);
+                Assert.Equal(2, items.Count);
+            }
         }
 
 
-        private IReadOnlyCollection<NotificationModel> GetTestNotifications()
+
+
+        private static IReadOnlyCollection<NotificationModel> GetTestNotifications()
         {
             var sessions = new List<NotificationModel>
             {
@@ -67,23 +130,5 @@ namespace Notifications.Tests
 
             return sessions.AsReadOnly();
         }
-
-        //private List<BrainstormSession> GetTestSessions()
-        //{
-        //    var sessions = new List<BrainstormSession>();
-        //    sessions.Add(new BrainstormSession()
-        //    {
-        //        DateCreated = new DateTime(2016, 7, 2),
-        //        Id = 1,
-        //        Name = "Test One"
-        //    });
-        //    sessions.Add(new BrainstormSession()
-        //    {
-        //        DateCreated = new DateTime(2016, 7, 1),
-        //        Id = 2,
-        //        Name = "Test Two"
-        //    });
-        //    return sessions;
-        //}
     }
 }
