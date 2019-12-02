@@ -9,6 +9,7 @@ using Notifications.Common.Interfaces;
 using Notifications.Common.Models;
 using Notifications.Controllers;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace Notifications.Tests
 {
@@ -84,9 +85,7 @@ namespace Notifications.Tests
 
             //Assert
             Assert.IsType<OkObjectResult>(okResult);
-            //Assert.IsType<OkObjectResult>(result);
-            //var model = Assert.IsAssignableFrom<List<NotificationModel>>(result);
-            //Assert.Equal(2, model.Count);
+           
         }
 
         [Fact]
@@ -102,6 +101,48 @@ namespace Notifications.Tests
 
             // Act
             var okResult = await controller.Get() as OkObjectResult;
+
+            // Assert
+            if (okResult != null)
+            {
+                var items = Assert.IsAssignableFrom<IReadOnlyCollection<NotificationModel>>(okResult.Value);
+                Assert.Equal(2, items.Count);
+            }
+        }
+
+        [Fact]
+        public async Task GetByUser_WhenCalled_ReturnsOkResult()
+        {
+            //Arrange
+            var mockService = new Mock<INotificationsService>();
+            var mockLogger = new Mock<ILogger<NotificationsController>>();
+            var userId = 2;
+            mockService.Setup(s => s.GetNotificationsByUser(userId))
+                .ReturnsAsync(GetUserTestNotifications(userId));
+            var controller = new NotificationsController(mockService.Object, mockLogger.Object);
+
+            // Act
+            //var result = await controller.Get();
+            var okResult = await controller.Get(userId);
+
+            //Assert
+            Assert.IsType<OkObjectResult>(okResult);
+
+        }
+
+        [Fact]
+        public async Task GetByUser_WhenCalled_ReturnsUserNotifications()
+        {
+            //Arrange
+            var mockService = new Mock<INotificationsService>();
+            var mockLogger = new Mock<ILogger<NotificationsController>>();
+            var userId = 2;
+            mockService.Setup(s => s.GetNotificationsByUser(userId))
+                .ReturnsAsync(GetUserTestNotifications(userId));
+            var controller = new NotificationsController(mockService.Object, mockLogger.Object);
+
+            // Act
+            var okResult = await controller.Get(userId) as OkObjectResult;
 
             // Assert
             if (okResult != null)
@@ -129,6 +170,27 @@ namespace Notifications.Tests
             };
 
             return sessions.AsReadOnly();
+        }
+
+        private static IReadOnlyCollection<NotificationModel> GetUserTestNotifications(int userId)
+        {
+            var sessions = new List<NotificationModel>
+            {
+                new NotificationModel()
+                {
+                    Id = Guid.NewGuid(), Body = "test", EventType = "AppointmentCancelled", UserId = 1
+                },
+                new NotificationModel()
+                {
+                    Id = Guid.NewGuid(), Body = "test2", EventType = "AppointmentCancelled", UserId = 2
+                },
+                new NotificationModel()
+                {
+                    Id = Guid.NewGuid(), Body = "test3", EventType = "AppointmentCancelled", UserId = 2
+                }
+            };
+
+            return sessions.Where(x => x.UserId == userId).ToList().AsReadOnly();
         }
     }
 }
