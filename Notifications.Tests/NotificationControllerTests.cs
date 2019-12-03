@@ -110,6 +110,26 @@ namespace Notifications.Tests
             }
         }
 
+       
+
+        [Fact]
+        public void GetByUserId_UnknownIntPassed_ReturnsNotFoundResult()
+        {
+
+            //Arrange
+            var mockService = new Mock<INotificationsService>();
+            var mockLogger = new Mock<ILogger<NotificationsController>>();
+            var userId = 0;
+            mockService.Setup(s => s.GetNotificationsByUser(userId))
+                .ReturnsAsync(GetUserTestNotifications(userId));
+            var controller = new NotificationsController(mockService.Object, mockLogger.Object);
+            // Act
+            var notFoundResult = controller.Get(userId);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(notFoundResult.Result);
+        }
+
         [Fact]
         public async Task GetByUser_WhenCalled_ReturnsOkResult()
         {
@@ -152,8 +172,50 @@ namespace Notifications.Tests
             }
         }
 
+        //[Fact]
+        //public void Add_InvalidObjectPassed_ReturnsBadRequest()
+        //{
+        //    // Arrange
+        //    var nameMissingItem = new ShoppingItem()
+        //    {
+        //        Manufacturer = "Guinness",
+        //        Price = 12.00M
+        //    };
+        //    _controller.ModelState.AddModelError("Name", "Required");
+
+        //    // Act
+        //    var badResponse = _controller.Post(nameMissingItem);
+
+        //    // Assert
+        //    Assert.IsType<BadRequestObjectResult>(badResponse);
+        //}
 
 
+        [Fact]
+        public async Task AddEvent_InvalidObjectPassed_ReturnsBadRequest()
+        {
+            // Arrange
+            //Arrange
+            var mockService = new Mock<INotificationsService>();
+            var mockLogger = new Mock<ILogger<NotificationsController>>();
+            var controller = new NotificationsController(mockService.Object, mockLogger.Object);
+
+
+            //public string Type { get; set; }
+            //public EventDataModel Data { get; set; }
+            //public int UserId { get; set; }
+
+            EventModel eventModel = null;
+
+            // Act
+            //var notFoundResult = controller.AddEvent(eventModel);
+
+            // Act
+            var badResponse = await controller.AddEvent(eventModel);
+
+            // Assert
+            Assert.IsType<BadRequestResult>(badResponse);
+        }
 
         private static IReadOnlyCollection<NotificationModel> GetTestNotifications()
         {

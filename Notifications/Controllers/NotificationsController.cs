@@ -39,7 +39,7 @@ namespace Notifications.Controllers
             try
             {
                 var notifications = await _notificationsService.GetAllNotifications();
-                if (notifications == null)
+                if (notifications == null || notifications.Count == 0)
                 {
                     _logger.LogWarning($"No Notifications found ");
                     return NotFound();
@@ -62,7 +62,7 @@ namespace Notifications.Controllers
             try
             {
                 var notifications = await _notificationsService.GetNotificationsByUser(userId);
-                if (notifications == null)
+                if (notifications == null  || notifications.Count == 0)
                 {
                     _logger.LogWarning($"No Notifications found ");
                     return NotFound();
