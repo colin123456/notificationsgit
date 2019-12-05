@@ -18,7 +18,8 @@ namespace Notifications.Services
 
         public void AddNotification(NotificationModel notification)
         {
-            throw new NotImplementedException();
+             this.notificationsAccess.AddNotification(notification);
+            
         }
 
         public async Task<bool> SaveChangesAsync()

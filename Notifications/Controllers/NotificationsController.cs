@@ -26,11 +26,11 @@ namespace Notifications.Controllers
             this._logger = logger;
         }
 
-        public NotificationsController(INotificationsService notificationsService)
-        {
-            this._notificationsService = notificationsService;
+        //public NotificationsController(INotificationsService notificationsService)
+        //{
+        //    this._notificationsService = notificationsService;
             
-        }
+        //}
 
         [Route("")]
         [HttpGet]
@@ -101,7 +101,7 @@ namespace Notifications.Controllers
                 
                 NotificationModel notification = new NotificationModel()
                 {
-                    Id = new Guid(), Body = interpolatedBodyData, EventType = eventModel.Type,
+                    Id = Guid.NewGuid(), Body = interpolatedBodyData, EventType = eventModel.Type,
                     UserId = eventModel.UserId
                 };
                 //Store the User notification.
@@ -132,7 +132,7 @@ namespace Notifications.Controllers
         {
             StringBuilder sb = new StringBuilder(templateBody);
 
-            sb.Replace("{FirstName}", eventData.FirstName);
+            sb.Replace("{Firstname}", eventData.FirstName);
                 sb.Replace("{AppointmentDateTime}", eventData.AppointmentDateTime.ToShortDateString());
                 sb.Replace("{OrganisationName}", eventData.OrganisationName);
                 sb.Replace("{Reason}", eventData.Reason);

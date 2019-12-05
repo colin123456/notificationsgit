@@ -25,7 +25,15 @@ namespace Notifications.DataAccess.Access
             {
                 throw new ArgumentException(nameof(notification));
             }
-            this.dbContext.Add(notification);
+
+            NotificationEntity notificationEntity = new NotificationEntity()
+            {
+                Body = notification.Body,
+                EventType = notification.EventType,
+                Id = notification.Id,
+                UserId = notification.UserId
+            };
+            this.dbContext.Add(notificationEntity);
         }
 
         public async Task<bool> SaveChangesAsync()
