@@ -113,11 +113,11 @@ namespace Notifications.Controllers
                 }
 
                 //send web socket
-                var context = ControllerContext.HttpContext;
-                //var isSocketRequest = context.WebSockets.IsWebSocketRequest;
-                var ct = context.RequestAborted;
-                WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                await SendStringAsync(webSocket, eventModel.ToString(), ct);
+                //var context = ControllerContext.HttpContext;
+                ////var isSocketRequest = context.WebSockets.IsWebSocketRequest;
+                //var ct = context.RequestAborted;
+                //WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                //await SendStringAsync(webSocket, eventModel.ToString(), ct);
                
                 return Ok();
             }
