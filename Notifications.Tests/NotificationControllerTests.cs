@@ -16,57 +16,7 @@ namespace Notifications.Tests
 
     public class NotificationControllerTests
     {
-        //[Fact]
-        //public async Task Index_ReturnsAViewResult_WithAListOfBrainstormSessions()
-        //{
-        //    // Arrange
-        //    var mockRepo = new Mock<IBrainstormSessionRepository>();
-        //    mockRepo.Setup(repo => repo.ListAsync())
-        //        .ReturnsAsync(GetTestSessions());
-        //    var controller = new HomeController(mockRepo.Object);
-
-        //    // Act
-        //    var result = await controller.Index();
-
-        //    // Assert
-        //    var viewResult = Assert.IsType<ViewResult>(result);
-        //    var model = Assert.IsAssignableFrom<IEnumerable<StormSessionViewModel>>(
-        //        viewResult.ViewData.Model);
-        //    Assert.Equal(2, model.Count());
-        //}
-
-        //var mockService = new Mock<IValidateBarcodeService>();
-        //var fakeModel = new ValidateBarcode { SiteId = 1, Barcode = "TEST" };
-
-        //mockService.Setup(t => t.ElasticSearchForBarcode(fakeModel)).Returns(Task.FromResult(new List<BarcodeDocument>()));
-
-        //var controller = new BarcodesController(mockService.Object);
-
-        //var result = await controller.ValidateBarcode(fakeModel);
-
-        //Assert.IsType<BadRequestObjectResult>(result);
-
-
-        //[Fact]
-        //public void Get_WhenCalled_ReturnsOkResult()
-        //{
-        //    // Act
-        //    var okResult = _controller.Get();
-
-        //    // Assert
-        //    Assert.IsType<OkObjectResult>(okResult.Result);
-        //}
-
-        //[Fact]
-        //public void Get_WhenCalled_ReturnsAllItems()
-        //{
-        //    // Act
-        //    var okResult = _controller.Get().Result as OkObjectResult;
-
-        //    // Assert
-        //    var items = Assert.IsType<List<ShoppingItem>>(okResult.Value);
-        //    Assert.Equal(3, items.Count);
-        //}
+       
 
         [Fact]
         public async Task Get_WhenCalled_ReturnsOkResult()
@@ -109,7 +59,6 @@ namespace Notifications.Tests
                 Assert.Equal(2, items.Count);
             }
         }
-
        
 
         [Fact]
@@ -172,29 +121,12 @@ namespace Notifications.Tests
             }
         }
 
-        //[Fact]
-        //public void Add_InvalidObjectPassed_ReturnsBadRequest()
-        //{
-        //    // Arrange
-        //    var nameMissingItem = new ShoppingItem()
-        //    {
-        //        Manufacturer = "Guinness",
-        //        Price = 12.00M
-        //    };
-        //    _controller.ModelState.AddModelError("Name", "Required");
-
-        //    // Act
-        //    var badResponse = _controller.Post(nameMissingItem);
-
-        //    // Assert
-        //    Assert.IsType<BadRequestObjectResult>(badResponse);
-        //}
-
+       
 
         [Fact]
         public async Task AddEvent_InvalidObjectPassed_ReturnsBadRequest()
         {
-            // Arrange
+            
             //Arrange
             var mockService = new Mock<INotificationsService>();
             var mockLogger = new Mock<ILogger<NotificationsController>>();
@@ -206,9 +138,6 @@ namespace Notifications.Tests
             //public int UserId { get; set; }
 
             EventModel eventModel = null;
-
-            // Act
-            //var notFoundResult = controller.AddEvent(eventModel);
 
             // Act
             var badResponse = await controller.AddEvent(eventModel);
